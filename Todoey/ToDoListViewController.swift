@@ -12,11 +12,20 @@ class ToDoListViewController: UITableViewController {
 
         var itemArray = ["Find Mike", "Buy Eggs", "Destroy Demogorgon"]
     
+        let defaults = UserDefaults.standard
         override func viewDidLoad() {
             super.viewDidLoad()
             // Do any additional setup after loading the view, typically from a nib.
-    
-    }
+            
+            // below line works if array exists, but if not, app will crash
+            // itemArray = defaults.array(forKey: "TodoListArray") as! [String]
+            // to avoid crash, use if
+            if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+                itemArray = items           //and can remove cast to a optional
+                            
+            }
+            
+        }
     
     
     //MARK  TableView Datasource Methods:  numberOfRowsInSection section:    and    didSelectRowAt indexPath
@@ -73,19 +82,22 @@ class ToDoListViewController: UITableViewController {
     @IBAction func AddItem(_ sender: Any) {
     
         var textField = UITextField()
-        
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            //what will happend once user clicks the Add Item button on our UIAlert
-            //print("Success!")
-            //print(textField.text)
-            //could add code to do something with no text
-            //b/c in Closure, requires self
             self.itemArray.append(textField.text!)
-            
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
             self.tableView.reloadData()
         }
+        
+        //what will happend once user clicks the Add Item button on our UIAlert
+        //print("Success!")
+        //print(textField.text)
+        //could add code to do something with no text
+        //b/c in Closure, requires self
+        
+            //need to persist, defaults get stored in pList file
+            //but to view it, need need to VIEW it
         
         //created as a local variable just inside this ..
         //need local variable created within the scope of this IBAction- var textField above
@@ -94,9 +106,7 @@ class ToDoListViewController: UITableViewController {
             alertTextField.placeholder = "Create new item"
             textField = alertTextField
         }
-        
         alert.addAction(action)
-     
         present(alert, animated: true, completion: nil)
     }
 
