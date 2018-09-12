@@ -10,7 +10,7 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
 
-        let itemArray = ["Find Mike", "Buy Eggs", "Destroy Demogorgon"]
+        var itemArray = ["Find Mike", "Buy Eggs", "Destroy Demogorgon"]
     
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -66,12 +66,44 @@ class ToDoListViewController: UITableViewController {
         
     }
 
-    }
+//MARK- Add New Items
 
     
+
+    @IBAction func AddItem(_ sender: Any) {
+    
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //what will happend once user clicks the Add Item button on our UIAlert
+            //print("Success!")
+            //print(textField.text)
+            //could add code to do something with no text
+            //b/c in Closure, requires self
+            self.itemArray.append(textField.text!)
+            
+            self.tableView.reloadData()
+        }
+        
+        //created as a local variable just inside this ..
+        //need local variable created within the scope of this IBAction- var textField above
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            textField = alertTextField
+        }
+        
+        alert.addAction(action)
+     
+        present(alert, animated: true, completion: nil)
+    }
+
+
     /*SHE DELETEDoverride func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }*/
-
+}
 
